@@ -33,16 +33,16 @@ class Storage:
 
     def get(self, cls, id):
         """ Retrieves an object """
-        if cls in classes.values() and id and type(int(id)) == str:
-            objs = self.__session.query(classes[cls]).all()
-            for obj in objs:
-                if obj.__class__.__name__ == cls and obj.id ==id:
-                    return obj
+        if cls in classes.values() and id:
+            objs = self.all(cls)
+            for k, v in objs.items():
+                if v.id == int(id):
+                    return objs[k]
         return None
 
     def count(self, cls=None):
         """ Returns the number of objects in storage """
-        objs = self.__session.query(classes[cls]).all()
+        objs = self.all(cls) if cls else {}
         return len(objs)
 
     def all(self, cls=None):
@@ -50,9 +50,9 @@ class Storage:
         new_dict = {}
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
-                objs = self.__session.query(classes[clss]).all()
+                objs = self.__session.query(cls).all()
                 for obj in objs:
-                    key = obj.__class__.__name__ + '.' + obj.id
+                    key = obj.__class__.__name__ + '.' + str(obj.id)
                     new_dict[key] = obj
         return new_dict
 
@@ -64,10 +64,12 @@ class Storage:
         """commit all changes of the current database session"""
         self.__session.commit()
 
-    def delete(self, obj=None):
+    def delete(self, cls, id):
         """delete from the current database session obj if not None"""
-        if obj is not None:
-            self.__session.delete(obj)
+        #if obj is not None and not(id):
+        #   self.__session.delete(obj)
+        if cls in classes.values():
+            self.__session.query(cls).filter_by(id=id).delete()
 
     def reload(self):
         """ creates all table in the database and database session """

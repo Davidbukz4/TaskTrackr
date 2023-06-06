@@ -1,14 +1,14 @@
--- creates the MySQL server user TTR_MYSQL_USER
+-- creates the MySQL server user ttr_dev
 
--- creates database with the name TTR_MYSQL_DB
-CREATE DATABASE IF NOT EXISTS TTR_MYSQL_DB;
+-- creates database with the name ttr_dev_db
+CREATE DATABASE IF NOT EXISTS ttr_dev_db;
 
--- creates user with the name 'TTR_MYSQL_USER' and password 'TTR_MYSQL_PWD'
-CREATE USER IF NOT EXISTS 'TTR_MYSQL_USER'@'localhost';
-SET PASSWORD FOR 'TTR_MYSQL_USER'@'localhost' = 'TTR_MYSQL_PWD';
+-- creates user with the name 'ttr_dev' and password 'ttr_dev_pwd'
+CREATE USER IF NOT EXISTS 'ttr_dev'@'localhost';
+SET PASSWORD FOR 'ttr_dev'@'localhost' = 'ttr_dev_pwd';
 
--- grant all privileges on database 'TTR_MYSQL_DB' to user 'hbnb_dev'
-GRANT ALL PRIVILEGES ON `TTR_MYSQL_DB`.* TO 'TTR_MYSQL_USER'@'localhost';
+-- grant all privileges on database 'ttr_dev_db' to user 'ttr_dev'
+GRANT ALL PRIVILEGES ON `ttr_dev_db`.* TO 'ttr_dev'@'localhost';
 
 -- apply changes to database
 FLUSH PRIVILEGES;

@@ -9,6 +9,7 @@ import sqlalchemy
 from sqlalchemy import Column, String, Integer, DateTime, func, create_engine, Boolean, ForeignKey, Sequence
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sys import argv
 
 Base = sqlalchemy.orm.declarative_base()
 
@@ -73,8 +74,8 @@ class Task(Base):
 
 
 engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'
-                       .format('david', 'david', 'alx'),
-                       pool_pre_ping=True)
+                       .format('ttr_dev', 'ttr_dev_pwd',
+                       'ttr_dev_db'), pool_pre_ping=True)
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)

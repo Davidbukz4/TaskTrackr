@@ -3,12 +3,12 @@
 TASK MODEL
 '''
 import models
-from models.user import User, Base
+from models.base_model import BaseModel, Base
 import sqlalchemy
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Sequence
 from sqlalchemy import ForeignKey, func
 
-class Task(Base):
+class Task(BaseModel, Base):
     ''' Representation of task '''
     __tablename__ = 'tasks'
 
