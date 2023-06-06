@@ -5,15 +5,15 @@ TASK MODEL
 import models
 from models.user import User, Base
 import sqlalchemy
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Sequence
+from sqlalchemy import ForeignKey, func
 
-
-class Task(User, Base):
+class Task(Base):
     ''' Representation of task '''
     __tablename__ = 'tasks'
 
-    id = Column(Integer, primary_key=True, autoincrement='auto',
-                server_default='1')
+    id = Column(Integer, Sequence('task_id_seq', start=1, increment=1),
+                     primary_key=True)
     title = Column(String(100), nullable=False)
     description = Column(String(256))
     completed = Column(Boolean, default=False)
@@ -22,6 +22,10 @@ class Task(User, Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     due_date = Column(DateTime)
 
-
-    def __init__(self):
-        super().__init__()
+    def __init__(self, title, description, completed, due_date, user_id):
+        ''' Initializes instance of the class '''
+        self.title = title
+        self.description = description
+        self.completed = completed
+        self.due_date = due_date
+        self.user_id = user_id

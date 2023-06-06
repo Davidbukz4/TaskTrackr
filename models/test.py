@@ -54,7 +54,7 @@ class Task(Base):
     ''' Representation of task '''
     __tablename__ = 'tasks'
 
-    task_id = Column(Integer, Sequence('task_id_seq', start=1, increment=1),
+    id = Column(Integer, Sequence('task_id_seq', start=1, increment=1),
                      primary_key=True)
     title = Column(String(100), nullable=False)
     description = Column(String(256))
@@ -73,7 +73,7 @@ class Task(Base):
 
 
 engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'
-                       .format(sys.argv[1], sys.argv[2], sys.arg[3]),
+                       .format('david', 'david', 'alx'),
                        pool_pre_ping=True)
 Base.metadata.create_all(engine)
 
@@ -98,6 +98,11 @@ task3 = Task(title='groceries', description='this is my first task', due_date=da
 session.add(task1)
 session.add(task2)
 session.add(task3)
+session.commit()
+
+task = session.query(Task).filter(Task.id == 1).one()
+task.title = 'Gym'
+task.updated_at = func.now()
 session.commit()
 
 session.close()
