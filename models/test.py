@@ -20,14 +20,16 @@ class User(Base):
 
     id = Column(Integer, Sequence('user_id_seq', start=1, increment=1),
                 primary_key=True)
-    username = Column(String(50), unique=True, nullable=False)
+    username = Column(String(100), unique=True, nullable=False)
+    email = Column(String(256), unique=True)
     password = Column(String(256), nullable=False)
     tasks = relationship("Task", backref="users")
     
-    def __init__(self, username, password):
+    def __init__(self, username, password, email):
         ''' initializes an instance of the model '''
-        self.username = username
         self.password = password
+        self.username = username
+        self.email = email
         #self.id = id
         #self.created_at = datetime.utcnow()
         #self.updated_at = self.created_at

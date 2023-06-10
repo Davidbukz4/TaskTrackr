@@ -7,6 +7,8 @@ from models.base_model import BaseModel, Base
 import sqlalchemy
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Sequence
 from sqlalchemy import ForeignKey, func
+from datetime import datetime
+
 
 class Task(BaseModel, Base):
     ''' Representation of task '''
@@ -22,10 +24,12 @@ class Task(BaseModel, Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     due_date = Column(DateTime)
 
-    def __init__(self, title, description, completed, due_date, user_id):
+    def __init__(self, title, description, due_date, user_id):
         ''' Initializes instance of the class '''
         self.title = title
         self.description = description
-        self.completed = completed
+        self.completed = False
         self.due_date = due_date
         self.user_id = user_id
+        self.created_at = datetime.utcnow()
+        self.updated_at = datetime.utcnow()

@@ -36,7 +36,8 @@ class Storage:
         if cls in classes.values() and id:
             objs = self.all(cls)
             for k, v in objs.items():
-                if v.id == int(id):
+                v = v.to_dict()
+                if v['id'] == int(id):
                     return objs[k]
         return None
 
@@ -51,10 +52,33 @@ class Storage:
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
                 objs = self.__session.query(cls).all()
-                for obj in objs:
-                    key = obj.__class__.__name__ + '.' + str(obj.id)
-                    new_dict[key] = obj
-        return new_dict
+                if objs is not None:
+                    for obj in objs:
+                        key = obj.__class__.__name__ + '.' + str(obj.id)
+                        new_dict[key] = obj
+                return new_dict
+        return {}
+
+    def user_tasks(self, id):
+        ''' Returns the number of tasks associated with a user '''
+        user_tasks = self.__session.query(Task).filter(Task.user_id == id)
+        task_count = 0
+        tasks = {}
+        for obj in user_tasks:
+            obj = obj.to_dict()
+            tasks['task.{}'.format(obj['id'])] = obj
+            task_count += 1
+        return [tasks, task_count]
+
+    def user_info(self):
+        ''' Returns users info '''
+        objs = self.__session.query(User)
+        users = []
+        for obj in objs:
+            obj = obj.to_dict()
+            del obj['__class__']
+            users.append(obj)
+        return users
 
     def new(self, obj):
         """add the object to the current database session"""
