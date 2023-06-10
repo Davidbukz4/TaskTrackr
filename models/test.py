@@ -84,8 +84,8 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 user1 = User(username='chris', password='pwd123')
-user2 = User(username='ace', password='pwd456')
-user3 = User(username='dada', password='pwd789')
+user2 = User(username='dave', password='pwd456')
+user3 = User(username='esther', password='pwd789')
 
 session.add(user1)
 session.add(user2)
