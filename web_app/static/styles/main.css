@@ -1,0 +1,120 @@
+body {
+  background-color: rgb(63, 238, 63);
+}
+
+h1 {
+  font-family: cursive, sans-serif;
+  margin-left: 25%;
+}
+
+input[type="text"],
+button {
+  display: block;
+  width: 90%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 10px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+#addTaskBtn {
+  width: 51%;
+  margin-right: auto;
+  margin-left: auto;
+  justify-content: center;
+  background-color: rgb(105, 80, 0);
+  border: none;
+  border-radius: 5px;
+  font-family: cursive;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: rgb(208, 157, 60);
+  border: 1px solid rgb(1, 84, 1);
+  border-radius: 5px;
+  padding: 7px;
+  margin-bottom: 10px;
+  width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+  justify-content: center;
+}
+
+.highlight {
+  background-color: yellow;
+}
+
+.editBtn,
+.deleteBtn {
+  display: inline-block;
+  width: 49%;
+  background-color: rgb(105, 80, 0);
+  border: none;
+  border-radius: 5px;
+  font-family: cursive;
+}
+
+.deleteBtn {
+  float: right;
+}
+
+h3 {
+  font-family: cursive;
+}
+
+p {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+ul li h3,
+ul li p {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-title,
+.task-description,
+.task-due-date {
+  max-width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+  justify-content: center;
+  background-color: #85c5ea;
+  border-radius: 4px;
+  font-family: Dekko;
+}
+
+.task-due-date {
+  display: block;
+  max-width: 100%;
+}
+
+.saveTaskBtn {
+  display: inline;
+  width: 20%;
+  margin-left: 25%;
+  background-color: rgb(105, 80, 0);
+  border: none;
+  border-radius: 3px;
+  font-family: cursive, sans-serif;
+}
+
+.cancelTaskBtn {
+  float: right;
+  display: inline;
+  width: 20%;
+  margin-right: 25%;
+  background-color: rgb(105, 80, 0);
+  border: none;
+  border-radius: 3px;
+  font-family: cursive, sans-serif;
+}

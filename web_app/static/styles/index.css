@@ -1,0 +1,36 @@
+body {
+  background-image: linear-gradient(
+      rgba(12, 125, 40, 0.6),
+      rgba(255, 255, 0, 0.5)
+    ),
+    url("background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100%;
+}
+
+div {
+  text-align: center;
+  margin-top: 150px;
+}
+
+h1 {
+  font-family: cursive, sans-serif;
+  font-size: 50px;
+}
+
+.info {
+  font-size: 20px;
+  font-family: Dekko, sans-serif;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+}
