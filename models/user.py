@@ -40,4 +40,4 @@ class User(BaseModel, Base):
         ''' checks password '''
         pwd_bytes = password.encode('utf-8')
         hashed_password = self.password
-        return bcrypt.checkpw(pwd_bytes, hashed_password)
+        return bcrypt.checkpw(pwd_bytes, hashed_password.encode('utf-8'))

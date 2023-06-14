@@ -37,6 +37,4 @@ class BaseModel():
             objs['updated_at'] = objs['updated_at'].isoformat()
         if '_sa_instance_state' in objs:
             del objs['_sa_instance_state']
-        if 'password' in objs:
-            del objs['password']
         return objs

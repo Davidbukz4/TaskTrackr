@@ -41,6 +41,16 @@ class Storage:
                     return objs[k]
         return None
 
+    def getUserObj(self, cls, username):
+        """ Retrieves an object by username """
+        if cls is User and username:
+            objs = self.all(cls)
+            for k, v in objs.items():
+                v = v.to_dict()
+                if v['username'] == username:
+                    return objs[k]
+        return None
+
     def count(self, cls=None):
         """ Returns the number of objects in storage """
         objs = self.all(cls) if cls else {}
