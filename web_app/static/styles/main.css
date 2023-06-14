@@ -24,20 +24,30 @@ button {
   margin-right: auto;
   margin-left: auto;
   justify-content: center;
-  background-color: rgb(96, 36, 62);
-  box-shadow: 2px 2px 5px rgba(78, 21, 68, 0.9);
+  background-color: rgb(31, 73, 131);
+  box-shadow: 2px 2px 5px rgb(45, 83, 137);
   border: none;
   border-radius: 5px;
   font-family: cursive;
   font-size: 28px;
 }
-#addTaskBtn:hover,
-.editBtn:hover,
-.deleteBtn:hover,
 .saveTaskBtnPut:hover,
-.saveTaskBtnPost:hover, .cancelTaskBtn:hover {
-  background-color: rgb(121, 53, 82);
+.saveTaskBtnPost:hover {
+  background-color: rgba(41, 153, 49, 0.933);
 }
+
+#addTaskBtn:hover {
+  background-color: rgb(45, 81, 132);
+}
+
+.editBtn:hover {
+  background-color: rgba(205, 143, 80, 0.867);
+}
+
+.deleteBtn:hover, .cancelTaskBtn:hover {
+  background-color: rgba(216, 40, 40, 0.793);
+}
+
 
 ul {
   list-style-type: none;
@@ -45,9 +55,9 @@ ul {
 }
 
 li {
-  background-color: rgb(162, 68, 87);
+  background-color: rgba(202, 198, 203, 0.692);
   border: none;
-  box-shadow: 2px 2px 5px rgba(78, 21, 68, 0.9);
+  box-shadow: 2px 2px 5px rgba(83, 76, 84, 0.692);
   border-radius: 5px;
   padding: 7px;
   margin-bottom: 10px;
@@ -64,24 +74,31 @@ li {
 .editBtn,
 .deleteBtn {
   display: inline-block;
-  width: 49%;
-  background-color: rgb(96, 36, 62);
+  width: 40%;
+  background-color: rgba(212, 135, 58, 0.867);
   border: none;
   border-radius: 5px;
   font-family: cursive;
 }
 
+.editBtn {
+  right: 5px;
+}
+
 .deleteBtn {
   float: right;
+  background-color: rgba(230, 11, 11, 0.793);
 }
 
 h3 {
-  font-family: cursive;
+  font-family: Merienda, cursive;
+  font-size: 22px;
+  margin-bottom: 5px;
 }
 
 p {
-  font-size: 15px;
-  margin-bottom: 5px;
+  font-size: 18px;
+  margin: 0;
 }
 
 ul li h3,
@@ -90,6 +107,7 @@ ul li p {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-family: Dekko, sans-serif;
 }
 
 .task-title,
@@ -114,7 +132,7 @@ ul li p {
   display: inline;
   width: 20%;
   margin-left: 25%;
-  background-color: rgb(96, 36, 62);
+  background-color: rgba(16, 144, 25, 0.933);
   border: none;
   border-radius: 3px;
   font-family: cursive, sans-serif;
@@ -125,8 +143,18 @@ ul li p {
   display: inline;
   width: 20%;
   margin-right: 25%;
-  background-color: rgb(96, 36, 62);
+  background-color: rgba(230, 11, 11, 0.793);
   border: none;
   border-radius: 3px;
   font-family: cursive, sans-serif;
+}
+
+
+
+
+/* Style the custom checkbox */
+.completedCheckbox {
+  width: 20px;
+  height: 30px;
+  
 }

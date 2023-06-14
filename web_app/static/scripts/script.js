@@ -4,6 +4,7 @@ $(document).ready(function () {
   var gTitle;
   var gDescription;
   var gDate;
+  var gCompleted;
 
   // reload user tasks
   function reloadUserTasks() {
@@ -20,6 +21,12 @@ $(document).ready(function () {
         // Iterate through the tasks and add them to the list
         response.forEach(function (task) {
           let fmtDate = new Date(task.due_date).toDateString();
+          let taskStatus = task.completed
+          if (taskStatus) {
+            taskStatus = ' checked'
+          } else {
+            taskStatus = ''
+          }
           var taskItem =
             "<li data-task-id=" +
             task.Task_id +
@@ -33,12 +40,15 @@ $(document).ready(function () {
             "<p>Due Date: " +
             fmtDate +
             "</p>" +
+            '<input type="checkbox" class="completedCheckbox"' + taskStatus + '>' +
             '<button class="editBtn">Edit</button>' +
             '<button class="deleteBtn">Delete</button>' +
             "</li>";
-
+            // $('.completedCheckbox').prop('checked', task.completed);
           $("#taskList").append(taskItem);
         });
+
+        highlightTasks();
       },
       error: function (xhr, status, error) {
         console.error("Error retrieving user tasks:", error);
@@ -84,6 +94,9 @@ $(document).ready(function () {
     $.ajax({
       url: "http://0.0.0.0:5001/api/v1/tasks/" + userId,
       method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       data: JSON.stringify(taskData),
       contentType: "application/json",
       success: function (response) {
@@ -102,11 +115,13 @@ $(document).ready(function () {
           "<p>Due Date: " +
           fmtDate +
           "</p>" +
+          '<input type="checkbox" class="completedCheckbox">' +
           '<button class="editBtn">Edit</button>' +
           '<button class="deleteBtn">Delete</button>' +
           "</li>";
 
         taskForm.replaceWith(taskItem);
+        highlightTasks()
       },
       error: function (xhr, status, error) {
         console.error("Error saving task:", error);
@@ -122,10 +137,13 @@ $(document).ready(function () {
 
     const originalTitle = gTitle; //taskItem.find("h3").text();
     const originalDescription = gDescription; //taskItem.find("p:first-of-type").text();
-    const originalDueDate = gDate; //taskItem
-    // .find("p:last-of-type")
-    // .text()
-    // .replace("Due Date: ", "");
+    const originalDueDate = gDate;
+    let originalCompleted = gCompleted; //taskItem
+    if (originalCompleted) {
+      originalCompleted = "checked"
+    } else {
+      originalCompleted = ""
+    }
 
     let taskItemHtml =
       '<li data-task-id="' +
@@ -140,6 +158,7 @@ $(document).ready(function () {
       "<p>Due Date: " +
       originalDueDate +
       "</p>" +
+      '<input type="checkbox" class="completedCheckbox"' + originalCompleted + '>' +
       '<button class="editBtn">Edit</button>' +
       '<button class="deleteBtn">Delete</button>' +
       "</li>";
@@ -156,6 +175,7 @@ $(document).ready(function () {
     var taskId = taskItem.data("task-id");
     const title = taskItem.find("h3").text();
     const description = taskItem.find("p:first-of-type").text();
+    const completed = taskItem.find(".completedCheckbox").prop("checked");
     const dueDate = taskItem
       .find("p:last-of-type")
       .text()
@@ -180,6 +200,7 @@ $(document).ready(function () {
     gTitle = title;
     gDescription = description;
     gDate = new Date(dueDate).toDateString();
+    gCompleted = completed;
 
     taskItem.replaceWith(editForm);
 
@@ -201,6 +222,9 @@ $(document).ready(function () {
       $.ajax({
         url: "http://0.0.0.0:5001/api/v1/tasks/" + taskId,
         method: "PUT",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
         data: JSON.stringify(editedTaskData),
         contentType: "application/json",
         success: function (response) {
@@ -218,11 +242,13 @@ $(document).ready(function () {
             "<p>Due Date: " +
             fmtDate +
             "</p>" +
+            '<input type="checkbox" class="completedCheckbox">' +
             '<button class="editBtn">Edit</button>' +
             '<button class="deleteBtn">Delete</button>' +
             "</li>";
 
           editedTaskForm.replaceWith(editedTaskItem);
+          highlightTasks()
         },
         error: function (xhr, status, error) {
           console.error("Error updating task:", error);
@@ -248,15 +274,49 @@ $(document).ready(function () {
     });
   });
 
-  // Highlight tasks with due date reached
-  const today = new Date().toISOString().slice(0, 10);
-  $("#taskList li").each(function () {
-    const dueDate = $(this)
-      .find("p:last-of-type")
-      .text()
-      .replace("Due Date: ", "");
-    if (dueDate <= today) {
-      $(this).addClass("highlight");
-    }
+  // Function to highlight tasks with due date reached
+  function highlightTasks() {
+    const today = new Date().toISOString().slice(0, 10);
+    $("#taskList li").each(function () {
+      let dueDate = $(this)
+        .find("p:last-of-type")
+        .text()
+        .replace("Due Date: ", "");
+      var date = new Date(dueDate);
+      var year = date.getFullYear();
+      var month = ("0" + (date.getMonth() + 1)).slice(-2);
+      var day = ("0" + date.getDate()).slice(-2);
+
+      // Format the date as yyyy-mm-dd
+      dueDate = year + "-" + month + "-" + day;
+      if (dueDate <= today) {
+        $(this).css("background", "yellow");
+      } else {
+        $(this).css("background", "");
+      }
+    });
+  }
+});
+
+$(document).on("change", ".completedCheckbox", function() {
+  const taskItem = $(this).parent();
+  const taskId = taskItem.data("task-id");
+  const completed = $(this).prop("checked");
+
+  // Send an AJAX request to update the completed status of the task
+  $.ajax({
+    url: "http://0.0.0.0:5001/api/v1/tasks/" + taskId,
+    method: "PUT",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+    data: JSON.stringify({ completed: completed }),
+    contentType: "application/json",
+    success: function(response) {
+      console.log(response)
+    },
+    error: function(xhr, status, error) {
+      console.error("Error updating task completion status:", error);
+    },
   });
 });

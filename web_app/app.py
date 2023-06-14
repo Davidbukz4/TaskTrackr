@@ -74,6 +74,10 @@ def main():
     else:
         return redirect(url_for('/login'))
 
+@app.route('/about', strict_slashes=False, methods=['GET'])
+def about():
+    return render_template('about.html', cache_id=uuid4())
+
 @app.teardown_appcontext
 def close(error):
     """ Remove the current SQLAlchemy Session """

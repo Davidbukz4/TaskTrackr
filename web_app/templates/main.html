@@ -2,11 +2,15 @@
 <html>
   <head>
     <title>Main Tasks</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main.css') }}?{{ cache_id }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main.css') }}?{{ cache_id }}" preload/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../static/scripts/script.js?{{ cache_id }}"></script>
     <link
       href="https://fonts.googleapis.com/css?family=Dekko"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Merienda"
       rel="stylesheet"
     />
   </head>
