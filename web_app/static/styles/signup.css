@@ -3,7 +3,7 @@ body {
       rgba(12, 125, 40, 0.6),
       rgba(255, 255, 0, 0.5)
     ),
-    url("background.jpg");
+    url("/static/images/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

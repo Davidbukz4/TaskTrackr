@@ -1,83 +1,170 @@
 $(document).ready(function () {
+  var userId = $("h1").attr("data-user-id");
+  // global value to be used by cancelBtn
+  var gTitle;
+  var gDescription;
+  var gDate;
+
+  // reload user tasks
+  function reloadUserTasks() {
+    $.ajax({
+      url: "http://0.0.0.0:5001/api/v1/tasks/user/" + userId,
+      method: "GET",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+      success: function (response) {
+        // Clear the task list
+        $("#taskList").empty();
+
+        // Iterate through the tasks and add them to the list
+        response.forEach(function (task) {
+          let fmtDate = new Date(task.due_date).toDateString();
+          var taskItem =
+            "<li data-task-id=" +
+            task.Task_id +
+            ">" +
+            "<h3>" +
+            task.title +
+            "</h3>" +
+            "<p>" +
+            task.description +
+            "</p>" +
+            "<p>Due Date: " +
+            fmtDate +
+            "</p>" +
+            '<button class="editBtn">Edit</button>' +
+            '<button class="deleteBtn">Delete</button>' +
+            "</li>";
+
+          $("#taskList").append(taskItem);
+        });
+      },
+      error: function (xhr, status, error) {
+        console.error("Error retrieving user tasks:", error);
+      },
+    });
+  }
+  // Reloads user tasks on page load
+  //var userId = 1; // Replace with the actual user ID
+  reloadUserTasks();
+
   // Handle adding a task
-  $('#addTaskBtn').click(function () {
+  $("#addTaskBtn").click(function () {
     const taskForm =
       '<div class="task-form">' +
       '<input type="text" class="task-title" placeholder="Title">' +
       '<input type="text" class="task-description" placeholder="Description">' +
       '<input type="date" class="task-due-date"><br>' +
-      '<button class="saveTaskBtn">Save</button>' +
+      '<button class="saveTaskBtnPost">Save</button>' +
       '<button class="cancelTaskBtn">Cancel</button>' +
-      '</div>';
+      "</div>";
 
-    $('#taskList').prepend(taskForm);
+    $("#taskList").prepend(taskForm);
+    gTitle = "";
+    gDescription = "";
+    gDate = "";
   });
 
   // Handle saving a task
-  $(document).on('click', '.saveTaskBtn', function () {
+  $(document).on("click", ".saveTaskBtnPost", function () {
     const taskForm = $(this).parent();
-    const title = taskForm.find('.task-title').val();
-    const description = taskForm.find('.task-description').val();
-    const dueDate = taskForm.find('.task-due-date').val();
+    const title = taskForm.find(".task-title").val();
+    const description = taskForm.find(".task-description").val();
+    const dueDate = taskForm.find(".task-due-date").val();
 
-    const taskItem =
-      '<li>' +
-      '<h3>' +
-      title +
-      '</h3>' +
-      '<p>' +
-      description +
-      '</p>' +
-      '<p>Due Date: ' +
-      dueDate +
-      '</p>' +
-      '<button class="editBtn">Edit</button>' +
-      '<button class="deleteBtn">Delete</button>' +
-      '</li>';
+    const formattedDueDate = new Date(dueDate).toISOString().split("T")[0];
 
-    taskForm.replaceWith(taskItem);
+    const taskData = {
+      title: title,
+      description: description,
+      due_date: formattedDueDate,
+    };
+
+    $.ajax({
+      url: "http://0.0.0.0:5001/api/v1/tasks/" + userId,
+      method: "POST",
+      data: JSON.stringify(taskData),
+      contentType: "application/json",
+      success: function (response) {
+        console.log(response);
+        fmtDate = new Date(response.due_date).toDateString();
+        const taskItem =
+          "<li data-task-id=" +
+          response.id +
+          ">" +
+          "<h3>" +
+          response.title +
+          "</h3>" +
+          "<p>" +
+          response.description +
+          "</p>" +
+          "<p>Due Date: " +
+          fmtDate +
+          "</p>" +
+          '<button class="editBtn">Edit</button>' +
+          '<button class="deleteBtn">Delete</button>' +
+          "</li>";
+
+        taskForm.replaceWith(taskItem);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error saving task:", error);
+      },
+    });
   });
 
   // Handle canceling a task
-  $(document).on('click', '.cancelTaskBtn', function () {
+  $(document).on("click", ".cancelTaskBtn", function () {
     const taskForm = $(this).parent();
-    const title = taskForm.find('.task-title').val();
-    const description = taskForm.find('.task-description').val();
-    const dueDate = taskForm.find('.task-due-date').val();
+    const taskId = taskForm.data("task-id");
+    const taskItem = $('#taskList li[data-task-id="' + taskId + '"]');
 
-    const taskItem =
-      '<li>' +
-      '<h3>' +
-      title +
-      '</h3>' +
-      '<p>' +
-      description +
-      '</p>' +
-      '<p>Due Date: ' +
-      dueDate +
-      '</p>' +
+    const originalTitle = gTitle; //taskItem.find("h3").text();
+    const originalDescription = gDescription; //taskItem.find("p:first-of-type").text();
+    const originalDueDate = gDate; //taskItem
+    // .find("p:last-of-type")
+    // .text()
+    // .replace("Due Date: ", "");
+
+    let taskItemHtml =
+      '<li data-task-id="' +
+      taskId +
+      '">' +
+      "<h3>" +
+      originalTitle +
+      "</h3>" +
+      "<p>" +
+      originalDescription +
+      "</p>" +
+      "<p>Due Date: " +
+      originalDueDate +
+      "</p>" +
       '<button class="editBtn">Edit</button>' +
       '<button class="deleteBtn">Delete</button>' +
-      '</li>';
-    if (title || description || dueDate) {
-      taskForm.replaceWith(taskItem);
-    } else {
-      taskForm.replaceWith('');
+      "</li>";
+
+    if (gTitle == "" && gDescription == "" && gDate == "") {
+      taskItemHtml = "";
     }
+    taskForm.replaceWith(taskItemHtml);
   });
 
   // Handle editing a task
-  $(document).on('click', '.editBtn', function () {
+  $(document).on("click", ".editBtn", function () {
     const taskItem = $(this).parent();
-    const title = taskItem.find('h3').text();
-    const description = taskItem.find('p:first-of-type').text();
+    var taskId = taskItem.data("task-id");
+    const title = taskItem.find("h3").text();
+    const description = taskItem.find("p:first-of-type").text();
     const dueDate = taskItem
-      .find('p:last-of-type')
+      .find("p:last-of-type")
       .text()
-      .replace('Due Date: ', '');
+      .replace("Due Date: ", "");
 
     const editForm =
-      '<div class="task-form">' +
+      '<div class="task-form" data-task-id=' +
+      taskId +
+      ">" +
       '<input type="text" class="task-title" value="' +
       title +
       '">' +
@@ -87,27 +174,89 @@ $(document).ready(function () {
       '<input type="date" class="task-due-date" value="' +
       dueDate +
       '">' +
-      '<button class="saveTaskBtn">Save</button>' +
+      '<button class="saveTaskBtnPut">Save</button>' +
       '<button class="cancelTaskBtn">Cancel</button>' +
-      '</div>';
+      "</div>";
+    gTitle = title;
+    gDescription = description;
+    gDate = new Date(dueDate).toDateString();
 
     taskItem.replaceWith(editForm);
+
+    // Handle saving the edited task
+    $(document).on("click", ".saveTaskBtnPut", function () {
+      const editedTaskForm = $(this).parent();
+      var taskId = editedTaskForm.data("task-id");
+      const editedTitle = editedTaskForm.find(".task-title").val();
+      const editedDescription = editedTaskForm.find(".task-description").val();
+      const editedDueDate = editedTaskForm.find(".task-due-date").val();
+
+      fmtDate = new Date(editedDueDate).toISOString().split("T")[0];
+      const editedTaskData = {
+        title: editedTitle,
+        description: editedDescription,
+        due_date: fmtDate,
+      };
+
+      $.ajax({
+        url: "http://0.0.0.0:5001/api/v1/tasks/" + taskId,
+        method: "PUT",
+        data: JSON.stringify(editedTaskData),
+        contentType: "application/json",
+        success: function (response) {
+          fmtDate = new Date(response.due_date).toDateString();
+          const editedTaskItem =
+            "<li data-task-id=" +
+            response.id +
+            ">" +
+            "<h3>" +
+            response.title +
+            "</h3>" +
+            "<p>" +
+            response.description +
+            "</p>" +
+            "<p>Due Date: " +
+            fmtDate +
+            "</p>" +
+            '<button class="editBtn">Edit</button>' +
+            '<button class="deleteBtn">Delete</button>' +
+            "</li>";
+
+          editedTaskForm.replaceWith(editedTaskItem);
+        },
+        error: function (xhr, status, error) {
+          console.error("Error updating task:", error);
+        },
+      });
+    });
   });
 
   // Handle deleting a task
-  $(document).on('click', '.deleteBtn', function () {
-    $(this).parent().remove();
+  $(document).on("click", ".deleteBtn", function () {
+    const taskItem = $(this).parent();
+    var taskId = taskItem.data("task-id");
+    $.ajax({
+      url: "http://0.0.0.0:5001/api/v1/tasks/" + taskId,
+      method: "DELETE",
+      success: function (response) {
+        console.log(response);
+        taskItem.remove();
+      },
+      error: function (xhr, status, error) {
+        console.error("Error deleting task:", error);
+      },
+    });
   });
 
   // Highlight tasks with due date reached
   const today = new Date().toISOString().slice(0, 10);
-  $('#taskList li').each(function () {
+  $("#taskList li").each(function () {
     const dueDate = $(this)
-      .find('p:last-of-type')
+      .find("p:last-of-type")
       .text()
-      .replace('Due Date: ', '');
+      .replace("Due Date: ", "");
     if (dueDate <= today) {
-      $(this).addClass('highlight');
+      $(this).addClass("highlight");
     }
   });
 });

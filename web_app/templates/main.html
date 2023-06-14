@@ -2,16 +2,16 @@
 <html>
   <head>
     <title>Main Tasks</title>
-    <link rel="stylesheet" type="text/css" href="main.css" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main.css') }}?{{ cache_id }}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="script.js"></script>
+    <script src="../static/scripts/script.js?{{ cache_id }}"></script>
     <link
       href="https://fonts.googleapis.com/css?family=Dekko"
       rel="stylesheet"
     />
   </head>
   <body>
-    <h1>My Tasks</h1>
+    <h1 data-user-id="{{ userId }}">My Tasks</h1>
     <button id="addTaskBtn">Add Task</button>
     <ul id="taskList">
       <!-- Tasks will be dynamically added here -->

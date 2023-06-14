@@ -2,18 +2,17 @@
 <html>
   <head>
     <title>Sign Up</title>
-    <link rel="stylesheet" type="text/css" href="signup.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/signup.css') }}?{{ cache_id }}" />
   </head>
   <body>
     <div class="container">
-      <form id="signupForm">
-        <h2>Register Account</h2>
-        <input type="text" id="username" placeholder="Username" required />
-        <input type="password" id="password" placeholder="Password" required />
-        <input type="email" id="email" placeholder="Email" required />
-        <button type="submit">Sign Up</button>
+      <form id="signupForm" method="POST" action="/signup">
+        <h2>Registration</h2>
+        {{ form.hidden_tag() }}
+        {{ form.username(class="form-control", id="username", placeholder="Username") }}<br>
+        {{ form.password(class="form-control", id="password", placeholder="Password") }}<br>
+        {{ form.email(class="form-control", id="email", placeholder="Email") }}<br>
+        {{ form.submit() }}
       </form>
     </div>
   </body>
