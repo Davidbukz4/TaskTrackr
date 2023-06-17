@@ -27,4 +27,4 @@ def error(e):
 if __name__ == '__main__':
     host = getenv('TTR_API_HOST') if getenv('TTR_API_HOST') else '0.0.0.0'
     port = getenv('TTR_API_PORT') if getenv('TTR_API_PORT') else 5000
-    app.run(host=host, port=port, threaded=True, debug=True) # remove debug mode later
+    app.run(host=host, port=port, threaded=True)

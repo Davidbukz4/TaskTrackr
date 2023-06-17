@@ -18,7 +18,7 @@ class TestBaseModel(unittest.TestCase):
         self.base_model = None
 
     def test_save(self):
-        self.assertIsNone(self.base_model.updated_at)
+        self.assertIsNone(self.base_model['updated_at'])
         self.base_model.save()
         self.assertIsInstance(self.base_model.updated_at, datetime)
 

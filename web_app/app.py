@@ -6,15 +6,25 @@ from models.task import Task
 from models.base_model import BaseModel
 from os import environ
 from uuid import uuid4
-from flask import Flask, render_template, redirect
-from flask import url_for, request, session, flash
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = 'holberton'
 
+# Initialize Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Configure the user loader function for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return storage.get(User, user_id)
 
 class SignupForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -22,12 +32,10 @@ class SignupForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Register')
 
-
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
-
 
 @app.route('/', strict_slashes=False, methods=['GET'])
 def home():
@@ -41,11 +49,14 @@ def signup():
         username = form.username.data
         password = form.password.data
         email = form.email.data
-        user = User(username=username, password=password, email=email)
-        storage.new(user)
-        storage.save()
-        flash('Registration successful. Please log in.')
-        return redirect(url_for('login'))
+        try:
+            user = User(username=username, password=password, email=email)
+            storage.new(user)
+            storage.save()
+            flash('Registration successful. Please log in.', 'info')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash('Username or email already exists. Login instead', 'error')
     return render_template('signup.html', form=form, cache_id=uuid4())
 
 @app.route('/login', strict_slashes=False, methods=['GET', 'POST'])
@@ -54,25 +65,26 @@ def login():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        userObj = storage.getUserObj(User, username)
-        if userObj and userObj.check_password(password):
-            user = userObj.to_dict()
-            session['username'] = user['username']
-            return redirect(url_for('main', user_id=user['id']))
+        user = storage.getUserObj(User, username)
+        if user and user.check_password(password):
+            userDict = user.to_dict()
+            login_user(user)
+            return redirect(url_for('main', user_id=userDict['id']))
         else:
-            flash('Invalid username or password. Please try again.')
+            flash('Invalid username or password. Please try again.', 'error')
     return render_template('login.html', form=form, cache_id=uuid4())
 
-@app.route('/main', strict_slashes=False,
-           methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/logout', strict_slashes=False, methods=['GET'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.route('/main', strict_slashes=False, methods=['GET', 'POST', 'PUT', 'DELETE'])
+@login_required
 def main():
-    if 'username' in session:
-        user_id = request.args.get('user_id')
-        return render_template('main.html', 
-                               userId=user_id,
-                               cache_id=uuid4())
-    else:
-        return redirect(url_for('/login'))
+    user_id = current_user.get_id()
+    return render_template('main.html', userId=user_id, cache_id=uuid4())
 
 @app.route('/about', strict_slashes=False, methods=['GET'])
 def about():
@@ -85,4 +97,4 @@ def close(error):
 
 if __name__ == "__main__":
     """ Main Function """
-    app.run(host='0.0.0.0', port=5000, threaded=True, debug=True)
+    app.run(host='0.0.0.0', port=5000, threaded=True)

@@ -5,11 +5,18 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/login.css') }}?{{ cache_id }}" preload/>
   </head>
   <body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <form id="loginForm" method="post" action="/login">
       <h2>Login</h2>
       {{ form.hidden_tag() }}
-      {{ form.username(class="form.control", id="username") }}
-      {{ form.password(class="form-control", id="password") }}
+      {{ form.username(class="form.control", id="username", placeholder="Username") }}
+      {{ form.password(class="form-control", id="password", placeholder="Password") }}
       {{ form.submit(class="btn btn-primary") }}
       <p>Don't have an account? <a href="/signup">Sign up</a></p>
     </form>

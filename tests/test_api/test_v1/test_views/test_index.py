@@ -7,6 +7,7 @@ from flask import Flask
 from flask.testing import FlaskClient
 from api.v1.app import (app)
 
+
 class TestApp(unittest.TestCase):
 
     def setUp(self):

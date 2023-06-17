@@ -11,9 +11,10 @@ import bcrypt
 from sqlalchemy import Column, String, Integer, DateTime, func
 from sqlalchemy import create_engine, Boolean, ForeignKey, Sequence
 from sqlalchemy.orm import relationship, sessionmaker
+from flask_login import UserMixin
 
 
-class User(BaseModel, Base):
+class User(UserMixin, BaseModel, Base):
     ''' Representation of user '''
     __tablename__ = 'users'
 
@@ -41,3 +42,17 @@ class User(BaseModel, Base):
         pwd_bytes = password.encode('utf-8')
         hashed_password = self.password
         return bcrypt.checkpw(pwd_bytes, hashed_password.encode('utf-8'))
+
+    def get_id(self):
+        ''' Returns the user ID as a string '''
+        return str(models.storage.getUserObj(User, self.username).to_dict()['id'])
+
+    @property
+    def is_authenticated(self):
+        ''' Returns True if the user is authenticated '''
+        return True
+
+    @property
+    def is_active(self):
+        ''' Returns True if the user is active '''
+        return True

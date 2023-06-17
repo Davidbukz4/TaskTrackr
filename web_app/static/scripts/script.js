@@ -45,7 +45,7 @@ $(document).ready(function () {
             '<button class="deleteBtn">Delete</button>' +
             "</li>";
             // $('.completedCheckbox').prop('checked', task.completed);
-          $("#taskList").append(taskItem);
+          $("#taskList").prepend(taskItem);
         });
 
         highlightTasks();
@@ -290,7 +290,7 @@ $(document).ready(function () {
       // Format the date as yyyy-mm-dd
       dueDate = year + "-" + month + "-" + day;
       if (dueDate <= today) {
-        $(this).css("background", "yellow");
+        $(this).css("background", "#c9b64a");
       } else {
         $(this).css("background", "");
       }
