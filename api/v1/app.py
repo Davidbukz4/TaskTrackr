@@ -11,7 +11,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
-cors = CORS(app)#, resources={r"/*": {"origins": "http://0.0.0.0:5000"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.teardown_appcontext
@@ -26,5 +26,5 @@ def error(e):
 
 if __name__ == '__main__':
     host = getenv('TTR_API_HOST') if getenv('TTR_API_HOST') else '0.0.0.0'
-    port = getenv('TTR_API_PORT') if getenv('TTR_API_PORT') else 5000
+    port = getenv('TTR_API_PORT') if getenv('TTR_API_PORT') else 5002
     app.run(host=host, port=port, threaded=True)

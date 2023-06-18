@@ -9,7 +9,7 @@ $(document).ready(function () {
   // reload user tasks
   function reloadUserTasks() {
     $.ajax({
-      url: "http://0.0.0.0:5001/api/v1/tasks/user/" + userId,
+      url: "http://34.232.68.93/api/v1/tasks/user/" + userId,
       method: "GET",
       headers: {
         "Access-Control-Allow-Origin": "*",
@@ -92,7 +92,7 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: "http://0.0.0.0:5001/api/v1/tasks/" + userId,
+      url: "http://34.232.68.93/api/v1/tasks/" + userId,
       method: "POST",
       headers: {
         "Access-Control-Allow-Origin": "*",
@@ -220,7 +220,7 @@ $(document).ready(function () {
       };
 
       $.ajax({
-        url: "http://0.0.0.0:5001/api/v1/tasks/" + taskId,
+        url: "http://34.232.68.93/api/v1/tasks/" + taskId,
         method: "PUT",
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -262,7 +262,7 @@ $(document).ready(function () {
     const taskItem = $(this).parent();
     var taskId = taskItem.data("task-id");
     $.ajax({
-      url: "http://0.0.0.0:5001/api/v1/tasks/" + taskId,
+      url: "http://34.232.68.93/api/v1/tasks/" + taskId,
       method: "DELETE",
       success: function (response) {
         console.log(response);
@@ -305,7 +305,7 @@ $(document).on("change", ".completedCheckbox", function() {
 
   // Send an AJAX request to update the completed status of the task
   $.ajax({
-    url: "http://0.0.0.0:5001/api/v1/tasks/" + taskId,
+    url: "http://34.232.68.93/api/v1/tasks/" + taskId,
     method: "PUT",
     headers: {
       "Access-Control-Allow-Origin": "*",
