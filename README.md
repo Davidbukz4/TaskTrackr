@@ -29,18 +29,31 @@ TTR_MYSQL_HOST=localhost TTR_MYSQL_DB=ttr_test_db TTR_TYPE_STORAGE=db \
 ## Environment
 
 * __OS:__ Ubuntu 20.04 LTS
-* __language:__ Python 3.8.3
+* __language:__ Python 3.8.10
 * __web server:__ nginx/1.4.6
-* __application server:__ Flask 2.2.0, Jinja2 2.9.6
+* __application server:__ Flask 2.2.0, Jinja2 3.1.2
 * __web server gateway:__ gunicorn (version 19.7.1)
-* __database:__ mysql Ver 14.14 Distrib 5.7.18
-* __documentation:__ Swagger (flasgger==0.6.6)
+* __database:__ mysql Ver 8.0.33
 * __style:__
   * __python:__ PEP 8 (v. 1.7.0)
   * __web static:__ [W3C Validator](https://validator.w3.org/)
   * __bash:__ ShellCheck 0.3.3
 
-<img src="https://github.com/davidbukz4/TaskTrackr/blob/master/dev/screenshot.png" />
+<img src="https://github.com/davidbukz4/TaskTrackr/static/images/screenshot.png" />
+
+## Requirements
+
+* MySQLdb==2.0.x
+* SQLAlchemy==1.4.x
+* bcrypt==3.1.7
+* Flask==2.2.0
+* Flask-Cors==3.0.10
+* Flask-Login==0.6.2
+* Flask-RESTful==0.3.9
+* Flask-SQLAlchemy==3.0.3
+* Flask-WTF==1.1.1
+* email-validator==2.0.0.post2
+* WTForms==3.0.1
 
 ---
 
@@ -50,6 +63,9 @@ TTR_MYSQL_HOST=localhost TTR_MYSQL_DB=ttr_test_db TTR_TYPE_STORAGE=db \
 
 This project uses python library, `unittest` to run tests on all python files.
 All unittests are in the `./tests` directory with the command:
+```
+python3 -m unittest discover tests
+```
 
 
 * DataBase Storage Engine Model
@@ -61,26 +77,6 @@ python3 -m unittest discover -v ./tests/
 ```
 
 ---
-
-### All Tests
-
-The bash script `init_test.sh` executes all these tests for 
-DataBase Engine Model:
-
-  * checks `pep8` style
-
-  * runs all unittests
-
-  * runs all w3c_validator tests
-
-  * cleans up all `__pycache__` directories and unused files.
-
-  * **Usage `init_test.sh`:**
-
-```
-$ ./dev/init_test.sh
-```
-
 
 
 ## Authors
